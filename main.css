@@ -1,0 +1,43 @@
+body{
+    background-color: beige;
+}
+
+.conteiner {
+    width: 700px;
+    margin: auto
+}
+
+.conteiner__wrapper {
+    background-color: bisque;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid;
+    color: black;
+    padding: 5px;
+    margin: 10px 0;
+    background-color: white;
+    border-radius: 15px
+}
+
+.item__email {
+    display: block;
+    width: 140px;
+}
+
+.item__text {
+    display: block; 
+    width: 140px;
+}
+
+.item__date {
+    display: block;
+}
+
+/*# sourceMappingURL=main.css.map*/
