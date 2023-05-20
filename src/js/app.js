@@ -1,84 +1,80 @@
 import { interval, EMPTY } from 'rxjs';
-import {take, catchError, map, switchMap } from 'rxjs/operators';
-import { ajax} from 'rxjs/ajax';
+import {
+  take, catchError, map, switchMap,
+} from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-const conteiner = document.querySelector('.conteiner__wrapper')
+const conteiner = document.querySelector('.conteiner__wrapper');
 
 const interval$ = interval(2000)
-    .pipe(
-        take(5),
-        switchMap( (event) => {
-            return ajax.getJSON('https://rxjs-backend-hzuk.onrender.com/messages/unread')
-            .pipe(
-                map(v => v.messages),
-                catchError(err => {
-                    console.log(err)
-                    return EMPTY
-                })
-                )
-        })
-    )
-.subscribe({
-        next: value => {
-            value.map(v => {
-                    conteiner.insertAdjacentElement( 'afterbegin' ,getItem(v))
-                })
-            }
-            ,
-        error: err => console.log(err)
-    })
-
-
+  .pipe(
+    take(5),
+    switchMap((event) => ajax.getJSON('https://rxjs-backend-hzuk.onrender.com/messages/unread')
+      .pipe(
+        map((v) => v.messages),
+        catchError((err) => {
+          console.log(err);
+          return EMPTY;
+        }),
+      )),
+  )
+  .subscribe({
+    next: (value) => {
+      value.map((v) => {
+        conteiner.insertAdjacentElement('afterbegin', getItem(v));
+      });
+    },
+    error: (err) => console.log(err),
+  });
 
 function getItem(value) {
-    const div = document.createElement('div');
-    div.className = "item";
+  const div = document.createElement('div');
+  div.className = 'item';
 
-    const email = document.createElement('span');
-    email.className = 'item__email';
-    email.textContent = value.from
+  const email = document.createElement('span');
+  email.className = 'item__email';
+  email.textContent = value.from;
 
-    const text = document.createElement('span');
-    text.className = 'item__text';
-    text.textContent = getCorrectText(value.subject);
+  const text = document.createElement('span');
+  text.className = 'item__text';
+  text.textContent = getCorrectText(value.subject);
 
-    const date = document.createElement('span');
-    date.className = "item__date";
-    date.textContent = getCorrectDate(value.received)
+  const date = document.createElement('span');
+  date.className = 'item__date';
+  date.textContent = getCorrectDate(value.received);
 
-    div.appendChild(email);
-    div.appendChild(text);
-    div.appendChild(date);
+  div.appendChild(email);
+  div.appendChild(text);
+  div.appendChild(date);
 
-    return div
-
+  return div;
 }
 
 function getCorrectText(text) {
-    let array = text.split('');
+  const array = text.split('');
 
-    if(array.length <= 15) return text
+  if (array.length <= 15) return text;
 
-    array.splice(15)
-    array.push('...')
-    let newText = array.join('')
+  array.splice(15);
+  array.push('...');
+  const newText = array.join('');
 
-    return newText;
+  return newText;
 }
 
 function getCorrectDate(date) {
-    let newDate = new Date(date)
+  const newDate = new Date(date);
 
-    let min = newDate.getMinutes();
-    let hourse = newDate.getHours();
+  const min = newDate.getMinutes();
+  const hourse = newDate.getHours();
 
-    let mounth = newDate.getMonth()
-    if(mounth <= 9) mounth = `0${mounth}`
-    
-    let day = newDate.getDay();
-    if(day <= 9) day = `0${day}`
-    
-    let year = newDate.getFullYear();
+  let mounth = newDate.getMonth();
+  if (mounth <= 9) mounth = `0${mounth}`;
 
-    return `${hourse}:${min} ${day}:${mounth}:${year}`
+  let day = newDate.getDay();
+  if (day <= 9) day = `0${day}`;
+
+  const year = newDate.getFullYear();
+
+  return `${hourse}:${min} ${day}:${mounth}:${year}`;
 }
